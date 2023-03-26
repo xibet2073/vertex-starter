@@ -3,8 +3,11 @@ package com.keelient.vertx_starter.verticles;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 
 public class VerticleA extends AbstractVerticle {
+  public static final Logger LOG = LoggerFactory.getLogger(VerticleA.class);
   public static void main(String[] args) {
     final Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new MainVerticle());
@@ -12,13 +15,13 @@ public class VerticleA extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
-    System.out.println("Start " + getClass().getName());
+    LOG.debug("Start " + getClass().getName());
     vertx.deployVerticle(new VerticleAA(), whenDeployed -> {
-      System.out.println("Deployed: " + VerticleAA.class.getName());
+      LOG.debug("Deployed: " + VerticleAA.class.getName());
       vertx.undeploy(whenDeployed.result()); // Verticle id
     });
     vertx.deployVerticle(new VerticleAB(), whenDeployed -> {
-      System.out.println("Deployed: " + VerticleAB.class.getName());
+      LOG.debug("Deployed: " + VerticleAB.class.getName());
     });
     startPromise.complete();
   }

@@ -1,10 +1,14 @@
 package com.keelient.vertx_starter;
 
+import com.keelient.vertx_starter.verticles.VerticleN;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 
 public class MainVerticle extends AbstractVerticle {
+  public static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
 
   public static void main(String[] args) {
     var vertx = Vertx.vertx();
@@ -20,7 +24,7 @@ public class MainVerticle extends AbstractVerticle {
     }).listen(8888, http -> {
       if (http.succeeded()) {
         startPromise.complete();
-        System.out.println("HTTP server started on port 8888");
+        LOG.debug("HTTP server started on port 8888");
       } else {
         startPromise.fail(http.cause());
       }
