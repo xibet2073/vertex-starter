@@ -7,6 +7,8 @@ import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 
+import java.util.Random;
+
 public class MainVerticle extends AbstractVerticle {
   public static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
 
@@ -28,6 +30,9 @@ public class MainVerticle extends AbstractVerticle {
       } else {
         startPromise.fail(http.cause());
       }
+    });
+    vertx.setPeriodic(500, id -> {
+      LOG.debug(new Random().nextDouble());
     });
   }
 }
