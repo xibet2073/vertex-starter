@@ -1,5 +1,6 @@
 package com.keelient.vertx_starter;
 
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
@@ -121,6 +122,29 @@ public class FuturePromiseExample {
         LOG.debug("Server started in port " + server.actualPort());
         context.completeNow();
       });
+  }
+  @Test
+  void futureComposition(Vertx vertx, VertxTestContext context) {
+    var one = Promise.<Void>promise();
+    var two = Promise.<Void>promise();
+    var three = Promise.<Void>promise();
+
+    var futureOne = one.future();
+    var futureTwo = two.future();
+    var futureThree = three.future();
+
+    CompositeFuture.all(futureOne, futureTwo, futureThree)
+      .onFailure(context::failNow)
+      .onSuccess(result -> {
+        LOG.debug("Success");
+        context.completeNow();
+      });
+
+    vertx.setTimer(500, id -> {
+      one.complete();
+      two.complete();
+      three.fail("Three failed");
+    });
   }
 }
 
